@@ -3,11 +3,12 @@ import { FaHome, FaUsers, FaMoneyBillWave, FaCog, FaSignOutAlt } from "react-ico
 import { useNavigate } from "react-router-dom";
 import { logout } from "../api";
 
-const BottomNav = () => {
+const BottomNav = ({ showToast }) => {
   const navigate = useNavigate();
   const handleLogout = () => {
     logout();
     localStorage.removeItem("user");
+    if (showToast) showToast("Déconnexion réussie", "success");
     navigate("/login");
   };
   return (

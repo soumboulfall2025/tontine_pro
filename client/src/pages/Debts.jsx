@@ -4,7 +4,7 @@ import Sidebar from "../components/Sidebar";
 import BottomNav from "../components/BottomNav";
 import { getDebts, getMembers, addDebt, markDebtPaid } from "../api";
 
-const Debts = () => {
+const Debts = ({ showToast }) => {
   const [debts, setDebts] = useState([]);
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,15 +30,25 @@ const Debts = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await addDebt(form);
-    setShowModal(false);
-    setForm({ member: "", amount: "", description: "", date: "", status: "non payée" });
-    fetchData();
+    try {
+      await addDebt(form);
+      setShowModal(false);
+      setForm({ member: "", amount: "", description: "", date: "", status: "non payée" });
+      fetchData();
+      if (showToast) showToast("Dette ajoutée avec succès", "success");
+    } catch (err) {
+      if (showToast) showToast("Erreur lors de l'ajout de la dette", "error");
+    }
   };
 
   const handleMarkPaid = async (id) => {
-    await markDebtPaid(id);
-    fetchData();
+    try {
+      await markDebtPaid(id);
+      fetchData();
+      if (showToast) showToast("Dette marquée comme payée", "success");
+    } catch (err) {
+      if (showToast) showToast("Erreur lors de la mise à jour", "error");
+    }
   };
 
   const user = JSON.parse(localStorage.getItem("user"));

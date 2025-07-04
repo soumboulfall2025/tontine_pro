@@ -4,7 +4,7 @@ import Sidebar from "../components/Sidebar";
 import BottomNav from "../components/BottomNav";
 import { getMembers, addMember } from "../api";
 
-const Members = () => {
+const Members = ({ showToast }) => {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -27,10 +27,15 @@ const Members = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await addMember(form);
-    setShowModal(false);
-    setForm({ name: "", phone: "", avatar: "" });
-    fetchMembers();
+    try {
+      await addMember(form);
+      setShowModal(false);
+      setForm({ name: "", phone: "", avatar: "" });
+      fetchMembers();
+      if (showToast) showToast("Membre ajouté avec succès", "success");
+    } catch (err) {
+      if (showToast) showToast("Erreur lors de l'ajout du membre", "error");
+    }
   };
 
   const user = JSON.parse(localStorage.getItem("user"));
