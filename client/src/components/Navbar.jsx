@@ -21,7 +21,7 @@ const Navbar = () => {
           <span className="material-icons text-gray-700">account_circle</span>
         </button>
         <button
-          className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition"
+          className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition hidden md:inline"
           onClick={handleLogout}
         >
           Déconnexion

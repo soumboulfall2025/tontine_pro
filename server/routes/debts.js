@@ -22,4 +22,19 @@ router.get('/member/:memberId', async (req, res) => {
   res.json(debts);
 });
 
+// PATCH marquer une dette comme payée
+router.patch('/:id/pay', async (req, res) => {
+  try {
+    const debt = await Debt.findByIdAndUpdate(
+      req.params.id,
+      { status: 'payée' },
+      { new: true }
+    );
+    if (!debt) return res.status(404).json({ error: 'Dette non trouvée' });
+    res.json(debt);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 module.exports = router;

@@ -23,6 +23,8 @@ const Login = () => {
       const res = await login({ email, password });
       if (res.user) {
         localStorage.setItem("user", JSON.stringify(res.user));
+      } else if (res.role) {
+        localStorage.setItem("user", JSON.stringify({ role: res.role }));
       }
       setSuccess("Connexion réussie ! Redirection...");
       setTimeout(() => navigate("/"), 1000);

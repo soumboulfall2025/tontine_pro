@@ -55,3 +55,8 @@ export const getDebtsByMember = async (memberId) => {
   const res = await axios.get(`${API_URL}/debts/member/${memberId}`);
   return res.data;
 };
+
+export const markDebtPaid = async (debtId) => {
+  const res = await axios.patch(`${API_URL}/debts/${debtId}/pay`);
+  return res.data;
+};

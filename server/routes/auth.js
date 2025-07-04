@@ -23,7 +23,7 @@ router.post('/login', async (req, res) => {
   const isMatch = await user.comparePassword(password);
   if (!isMatch) return res.status(400).json({ error: 'Mot de passe incorrect' });
   const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
-  res.json({ token, role: user.role });
+  res.json({ token, user: { _id: user._id, email: user.email, role: user.role, name: user.name } });
 });
 
 module.exports = router;

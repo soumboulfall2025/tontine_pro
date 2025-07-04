@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import BottomNav from "../components/BottomNav";
-import { getDebts, getMembers, addDebt } from "../api";
+import { getDebts, getMembers, addDebt, markDebtPaid } from "../api";
 
 const Debts = () => {
   const [debts, setDebts] = useState([]);
@@ -36,6 +36,11 @@ const Debts = () => {
     fetchData();
   };
 
+  const handleMarkPaid = async (id) => {
+    await markDebtPaid(id);
+    fetchData();
+  };
+
   const user = JSON.parse(localStorage.getItem("user"));
   const isAdmin = user && user.role === "admin";
 
@@ -63,6 +68,7 @@ const Debts = () => {
                     <th className="py-2 px-2">Date</th>
                     <th className="py-2 px-2">Statut</th>
                     <th className="py-2 px-2">Description</th>
+                    {isAdmin && <th className="py-2 px-2">Action</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -75,6 +81,13 @@ const Debts = () => {
                         <span className={`px-2 py-1 rounded text-xs font-bold ${d.status === 'payée' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{d.status}</span>
                       </td>
                       <td className="py-2 px-2">{d.description}</td>
+                      {isAdmin && (
+                        <td className="py-2 px-2">
+                          {d.status === 'non payée' && (
+                            <button onClick={() => handleMarkPaid(d._id)} className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 text-xs">Marquer comme payée</button>
+                          )}
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>
