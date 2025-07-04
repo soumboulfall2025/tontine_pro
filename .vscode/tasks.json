@@ -1,0 +1,13 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "Init Vite React + Tailwind + axios",
+			"command": "npm create vite@latest client -- --template react",
+			"args": [],
+			"isBackground": false,
+			"group": "build"
+		}
+	]
+}
