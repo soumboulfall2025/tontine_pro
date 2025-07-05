@@ -3,13 +3,15 @@ const Debt = require('../models/Debt');
 const Member = require('../models/Member');
 const router = express.Router();
 
-// GET toutes les dettes
+// GET toutes les dettes (filtrage par tontine possible)
 router.get('/', async (req, res) => {
-  const debts = await Debt.find().populate('member paidBy');
+  const filter = {};
+  if (req.query.tontine) filter.tontine = req.query.tontine;
+  const debts = await Debt.find(filter).populate('member paidBy');
   res.json(debts);
 });
 
-// POST ajouter une dette
+// POST ajouter une dette (association à une tontine)
 router.post('/', async (req, res) => {
   const debt = new Debt(req.body);
   await debt.save();

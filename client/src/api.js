@@ -30,13 +30,14 @@ export const logout = () => {
 export const isAuthenticated = () => !!getToken();
 
 // --- Membres ---
-export const getMembers = async () => {
-  const res = await axios.get(`${API_URL}/members`);
+export const getMembers = async (tontineId) => {
+  const url = tontineId ? `${API_URL}/members?tontine=${tontineId}` : `${API_URL}/members`;
+  const res = await axios.get(url);
   return res.data;
 };
 
-export const addMember = async (member) => {
-  const res = await axios.post(`${API_URL}/members`, member);
+export const addMember = async (member, tontineId) => {
+  const res = await axios.post(`${API_URL}/members`, { ...member, tontine: tontineId });
   return res.data;
 };
 
@@ -46,13 +47,14 @@ export const deleteMember = async (memberId) => {
 };
 
 // --- Dettes ---
-export const getDebts = async () => {
-  const res = await axios.get(`${API_URL}/debts`);
+export const getDebts = async (tontineId) => {
+  const url = tontineId ? `${API_URL}/debts?tontine=${tontineId}` : `${API_URL}/debts`;
+  const res = await axios.get(url);
   return res.data;
 };
 
-export const addDebt = async (debt) => {
-  const res = await axios.post(`${API_URL}/debts`, debt);
+export const addDebt = async (debt, tontineId) => {
+  const res = await axios.post(`${API_URL}/debts`, { ...debt, tontine: tontineId });
   return res.data;
 };
 

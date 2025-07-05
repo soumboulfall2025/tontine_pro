@@ -14,6 +14,10 @@ const Clients = () => {
   const [members, setMembers] = useState([]);
   const [debts, setDebts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedTontine, setSelectedTontine] = useState(() => {
+    const t = localStorage.getItem("selectedTontine");
+    return t ? JSON.parse(t) : null;
+  });
   const query = useQuery();
   const memberId = query.get("member");
 
@@ -21,6 +25,15 @@ const Clients = () => {
     fetchData();
     // eslint-disable-next-line
   }, [memberId]);
+
+  useEffect(() => {
+    if (!selectedTontine) return;
+    setLoading(true);
+    getMembers(selectedTontine._id).then((m) => {
+      setMembers(m);
+      setLoading(false);
+    });
+  }, [selectedTontine]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -64,12 +77,22 @@ const Clients = () => {
                       {debts.map((d, i) => (
                         <tr key={i} className="border-b last:border-0">
                           <td className="py-2 px-2">{d.amount} FCFA</td>
-                          <td className="py-2 px-2">{new Date(d.date).toLocaleDateString()}</td>
                           <td className="py-2 px-2">
-                            <span className={`px-2 py-1 rounded text-xs font-bold ${d.status === 'payée' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{d.status}</span>
+                            {new Date(d.date).toLocaleDateString()}
+                          </td>
+                          <td className="py-2 px-2">
+                            <span
+                              className={`px-2 py-1 rounded text-xs font-bold ${
+                                d.status === "payée"
+                                  ? "bg-green-100 text-green-700"
+                                  : "bg-red-100 text-red-700"
+                              }`}
+                            >
+                              {d.status}
+                            </span>
                           </td>
                           <td className="py-2 px-2">{d.description}</td>
-                          <td className="py-2 px-2">{d.member?.name || '-'}</td>
+                          <td className="py-2 px-2">{d.member?.name || "-"}</td>
                         </tr>
                       ))}
                     </tbody>

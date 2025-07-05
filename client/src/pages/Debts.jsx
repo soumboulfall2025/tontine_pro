@@ -33,18 +33,23 @@ const Debts = ({ showToast }) => {
   const [confirm, setConfirm] = useState({ open: false, id: null });
   const [confirmDelete, setConfirmDelete] = useState({ open: false, id: null });
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const [selectedTontine, setSelectedTontine] = useState(() => {
+    const t = localStorage.getItem("selectedTontine");
+    return t ? JSON.parse(t) : null;
+  });
 
-  const fetchData = async () => {
+  useEffect(() => {
+    if (!selectedTontine) return;
     setLoading(true);
-    const d = await getDebts();
-    const m = await getMembers();
-    setDebts(d);
-    setMembers(m);
-    setLoading(false);
-  };
+    Promise.all([
+      getDebts(selectedTontine._id),
+      getMembers(selectedTontine._id)
+    ]).then(([d, m]) => {
+      setDebts(d);
+      setMembers(m);
+      setLoading(false);
+    });
+  }, [selectedTontine]);
 
   // Recherche/filtre
   const filtered = debts.filter(d => {
@@ -86,7 +91,7 @@ const Debts = ({ showToast }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await addDebt(form);
+      await addDebt(form, selectedTontine?._id);
       setShowModal(false);
       setForm({ member: "", amount: "", description: "", date: "", status: "non payée" });
       fetchData();

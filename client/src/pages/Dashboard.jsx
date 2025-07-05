@@ -11,7 +11,10 @@ const Dashboard = () => {
   const [members, setMembers] = useState([]);
   const [debts, setDebts] = useState([]);
   const [tontines, setTontines] = useState([]);
-  const [selectedTontine, setSelectedTontine] = useState(null);
+  const [selectedTontine, setSelectedTontine] = useState(() => {
+    const t = localStorage.getItem("selectedTontine");
+    return t ? JSON.parse(t) : null;
+  });
   const [tontineModal, setTontineModal] = useState(false);
   const [newTontine, setNewTontine] = useState({ name: "", description: "" });
   const [loading, setLoading] = useState(true);
@@ -19,6 +22,7 @@ const Dashboard = () => {
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem("darkMode") === "true";
   });
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,9 +48,28 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
+    if (!selectedTontine) return;
+    setLoading(true);
+    Promise.all([
+      getMembers(selectedTontine._id),
+      getDebts(selectedTontine._id)
+    ]).then(([m, d]) => {
+      setMembers(m);
+      setDebts(d);
+      setLoading(false);
+    });
+  }, [selectedTontine]);
+
+  useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
     localStorage.setItem("darkMode", darkMode);
   }, [darkMode]);
+
+  useEffect(() => {
+    if (selectedTontine) {
+      localStorage.setItem("selectedTontine", JSON.stringify(selectedTontine));
+    }
+  }, [selectedTontine]);
 
   const handleSelectTontine = (id) => {
     const t = tontines.find(t => t._id === id);
@@ -56,13 +79,16 @@ const Dashboard = () => {
   const handleCreateTontine = async (e) => {
     e.preventDefault();
     setTontineLoading(true);
+    setError("");
     try {
       const t = await createTontine(newTontine);
       setTontines(prev => [...prev, t]);
       setSelectedTontine(t);
       setTontineModal(false);
       setNewTontine({ name: "", description: "" });
-    } catch {}
+    } catch (err) {
+      setError(err?.response?.data?.message || "Erreur lors de la création de la tontine");
+    }
     setTontineLoading(false);
   };
 
@@ -109,6 +135,7 @@ const Dashboard = () => {
           <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
             <form onSubmit={handleCreateTontine} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 w-full max-w-sm flex flex-col gap-4">
               <div className="text-lg font-bold text-center">Créer une nouvelle tontine</div>
+              {error && <div className="text-red-600 text-center text-sm font-bold">{error}</div>}
               <input value={newTontine.name} onChange={e => setNewTontine({ ...newTontine, name: e.target.value })} required placeholder="Nom de la tontine" className="p-2 rounded border" />
               <textarea value={newTontine.description} onChange={e => setNewTontine({ ...newTontine, description: e.target.value })} placeholder="Description (optionnelle)" className="p-2 rounded border" rows={2} />
               <div className="flex gap-2 justify-center mt-2">

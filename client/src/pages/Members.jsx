@@ -9,17 +9,19 @@ const Members = ({ showToast }) => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ name: "", phone: "", avatar: "" });
+  const [selectedTontine, setSelectedTontine] = useState(() => {
+    const t = localStorage.getItem("selectedTontine");
+    return t ? JSON.parse(t) : null;
+  });
 
   useEffect(() => {
-    fetchMembers();
-  }, []);
-
-  const fetchMembers = async () => {
+    if (!selectedTontine) return;
     setLoading(true);
-    const m = await getMembers();
-    setMembers(m);
-    setLoading(false);
-  };
+    getMembers(selectedTontine._id).then((m) => {
+      setMembers(m);
+      setLoading(false);
+    });
+  }, [selectedTontine]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -28,10 +30,10 @@ const Members = ({ showToast }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await addMember(form);
+      await addMember(form, selectedTontine?._id);
       setShowModal(false);
       setForm({ name: "", phone: "", avatar: "" });
-      fetchMembers();
+      getMembers(selectedTontine._id).then(setMembers);
       if (showToast) showToast("Membre ajouté avec succès", "success");
     } catch (err) {
       if (showToast) showToast("Erreur lors de l'ajout du membre", "error");

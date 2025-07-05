@@ -3,17 +3,19 @@ const User = require('../models/User');
 const { authMiddleware, adminOnly } = require('../middleware/auth');
 const router = express.Router();
 
-// GET tous les membres (auth requis)
+// GET tous les membres (auth requis, filtrage par tontine possible)
 router.get('/', authMiddleware, async (req, res) => {
-  const members = await User.find({ role: 'member' });
+  const filter = { role: 'member' };
+  if (req.query.tontine) filter.tontine = req.query.tontine;
+  const members = await User.find(filter);
   res.json(members);
 });
 
-// POST ajouter un membre (admin uniquement)
+// POST ajouter un membre (admin uniquement, association à une tontine)
 router.post('/', authMiddleware, adminOnly, async (req, res) => {
   try {
-    const { name, email, phone, password, avatar } = req.body;
-    const user = new User({ name, email, phone, password, avatar, role: 'member' });
+    const { name, email, phone, password, avatar, tontine } = req.body;
+    const user = new User({ name, email, phone, password, avatar, role: 'member', tontine });
     await user.save();
     res.status(201).json(user);
   } catch (err) {

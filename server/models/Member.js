@@ -6,7 +6,8 @@ const memberSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   avatar: { type: String },
-  role: { type: String, enum: ['admin', 'member'], default: 'member' }
+  role: { type: String, enum: ['admin', 'member'], default: 'member' },
+  tontine: { type: mongoose.Schema.Types.ObjectId, ref: 'Tontine', required: true }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Member', memberSchema);
