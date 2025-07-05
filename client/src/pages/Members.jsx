@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import BottomNav from "../components/BottomNav";
 import { getMembers, addMember } from "../api";
+import axios from "axios";
 
 const Members = ({ showToast }) => {
   const [members, setMembers] = useState([]);
@@ -40,6 +41,30 @@ const Members = ({ showToast }) => {
     }
   };
 
+  const sendManualReminder = async (member) => {
+    try {
+      await axios.post("/api/sms/send", {
+        to: member.phone,
+        message: `Rappel: Vous avez une ou plusieurs dettes à régler dans la tontine ${selectedTontine?.name}. Merci de vérifier votre espace membre.`,
+      });
+      if (showToast) showToast("Rappel SMS envoyé !", "success");
+    } catch (err) {
+      if (showToast) showToast("Erreur lors de l'envoi du rappel", "error");
+    }
+  };
+
+  const sendManualWhatsApp = async (member) => {
+    try {
+      await axios.post("/api/whatsapp/send", {
+        to: member.phone,
+        message: `Rappel WhatsApp: Vous avez une ou plusieurs dettes à régler dans la tontine ${selectedTontine?.name}. Merci de vérifier votre espace membre.`,
+      });
+      if (showToast) showToast("Rappel WhatsApp envoyé !", "success");
+    } catch (err) {
+      if (showToast) showToast("Erreur lors de l'envoi du WhatsApp", "error");
+    }
+  };
+
   const user = JSON.parse(localStorage.getItem("user"));
   const isAdmin = user && user.role === "admin";
 
@@ -61,9 +86,9 @@ const Members = ({ showToast }) => {
             )}
           </div>
           {loading ? (
-            <div className="text-center py-10 text-gray-500">Chargement...</div>
+            <div>Loading...</div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="flex flex-col gap-4">
               {members.map((m) => (
                 <div
                   key={m._id}
@@ -72,9 +97,7 @@ const Members = ({ showToast }) => {
                   <img
                     src={
                       m.avatar ||
-                      `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                        m.name
-                      )}`
+                      `https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}`
                     }
                     alt={m.name}
                     className="w-12 h-12 rounded-full object-cover border-2 border-green-400"
@@ -88,6 +111,22 @@ const Members = ({ showToast }) => {
                     >
                       Voir dettes
                     </button>
+                    {isAdmin && (
+                      <>
+                        <button
+                          className="mt-2 ml-2 bg-orange-500 text-white px-3 py-1 rounded hover:bg-orange-600 text-sm"
+                          onClick={() => sendManualReminder(m)}
+                        >
+                          Envoyer rappel
+                        </button>
+                        <button
+                          className="mt-2 ml-2 bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-sm"
+                          onClick={() => sendManualWhatsApp(m)}
+                        >
+                          WhatsApp
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               ))}

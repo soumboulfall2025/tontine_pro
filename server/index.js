@@ -43,6 +43,7 @@ const debtsRouter = require('./routes/debts');
 const authRouter = require('./routes/auth');
 const tontinesRouter = require('./routes/tontines');
 const smsRouter = require('./routes/sms');
+const whatsappRoutes = require('./routes/whatsapp');
 
 // --- Utilisation des routes ---
 app.use('/api/members', membersRouter);
@@ -50,6 +51,7 @@ app.use('/api/debts', debtsRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/tontines', tontinesRouter);
 app.use('/api/sms', smsRouter);
+app.use('/api/whatsapp', whatsappRoutes);
 
 // --- Gestion des routes non trouvées ---
 app.use((req, res) => {

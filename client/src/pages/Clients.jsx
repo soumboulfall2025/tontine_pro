@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import BottomNav from "../components/BottomNav";
 import ClientsList from "../components/ClientsList";
+import MemberHistory from "../components/MemberHistory";
 import { getMembers, getDebtsByMember } from "../api";
 import { useLocation } from "react-router-dom";
 
@@ -97,6 +98,11 @@ const Clients = () => {
                       ))}
                     </tbody>
                   </table>
+                </div>
+              )}
+              {memberId && (
+                <div className="mt-8">
+                  <MemberHistory memberId={memberId} tontineId={selectedTontine?._id} />
                 </div>
               )}
             </>
