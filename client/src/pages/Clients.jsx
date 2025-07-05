@@ -41,6 +41,17 @@ const Clients = () => {
     setLoading(false);
   };
 
+  if (!selectedTontine) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <h2 className="text-xl font-bold mb-4">Aucune tontine sélectionnée</h2>
+        <p className="text-gray-500 mb-4">
+          Veuillez sélectionner ou créer une tontine pour afficher les membres.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col md:flex-row w-full h-full min-h-screen overflow-x-hidden">
       <Sidebar />
@@ -94,7 +105,10 @@ const Clients = () => {
               )}
               {memberId && (
                 <div className="mt-8">
-                  <MemberHistory memberId={memberId} tontineId={selectedTontine?._id} />
+                  <MemberHistory
+                    memberId={memberId}
+                    tontineId={selectedTontine?._id}
+                  />
                 </div>
               )}
             </>

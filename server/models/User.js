@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   role: { type: String, enum: ['admin', 'member'], default: 'member' },
   avatar: { type: String },
+  tontine: { type: mongoose.Schema.Types.ObjectId, ref: 'Tontine' }, // Ajout du lien vers la tontine
 }, { timestamps: true });
 
 userSchema.pre('save', async function (next) {
