@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { deleteMember, addMember } from "../api";
+import axios from "axios";
 
 const getInitials = (name) => {
   if (!name) return "?";
@@ -88,12 +89,55 @@ const AddMemberModal = ({ open, onClose, onAdd }) => {
   );
 };
 
+const SmsModal = ({ open, onClose, member }) => {
+  const [message, setMessage] = useState(`Bonjour ${member?.name}, merci de penser à votre cotisation.`);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+  if (!open) return null;
+  const handleSend = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setSuccess("");
+    try {
+      await axios.post("/api/sms/send", { to: member.phone, message });
+      setSuccess("SMS envoyé !");
+    } catch (err) {
+      setError("Erreur lors de l'envoi du SMS");
+    }
+    setLoading(false);
+  };
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+      <form onSubmit={handleSend} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 w-full max-w-sm flex flex-col gap-4">
+        <div className="text-lg font-bold text-center">Envoyer un rappel</div>
+        <div className="text-sm text-gray-700 dark:text-gray-200 text-center">
+          À : <b>{member?.name}</b> ({member?.phone})
+        </div>
+        <textarea value={message} onChange={e => setMessage(e.target.value)} className="p-2 rounded border" rows={3} required />
+        {success && <div className="text-green-600 text-center">{success}</div>}
+        {error && <div className="text-red-500 text-center">{error}</div>}
+        <div className="flex gap-2 justify-center mt-2">
+          <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded-lg button-hover" disabled={loading}>
+            {loading ? "Envoi..." : "Envoyer"}
+          </button>
+          <button type="button" onClick={onClose} className="bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded-lg button-hover">
+            Annuler
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
 const ClientsList = ({ members }) => {
   const [search, setSearch] = useState("");
   const [confirm, setConfirm] = useState({ open: false, id: null });
   const [addModal, setAddModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [localMembers, setLocalMembers] = useState(members);
+  const [smsModal, setSmsModal] = useState({ open: false, member: null });
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
   const isAdmin = user && user.role === "admin";
@@ -196,13 +240,21 @@ const ClientsList = ({ members }) => {
               Voir dettes
             </button>
             {isAdmin && (
-              <button
-                onClick={() => handleDelete(m._id)}
-                className="bg-red-500 text-white px-3 py-1 rounded-lg button-hover ml-2"
-                disabled={loading}
-              >
-                Supprimer
-              </button>
+              <>
+                <button
+                  onClick={() => handleDelete(m._id)}
+                  className="bg-red-500 text-white px-3 py-1 rounded-lg button-hover ml-2"
+                  disabled={loading}
+                >
+                  Supprimer
+                </button>
+                <button
+                  onClick={() => setSmsModal({ open: true, member: m })}
+                  className="bg-yellow-500 text-white px-3 py-1 rounded-lg button-hover ml-2"
+                >
+                  Envoyer rappel
+                </button>
+              </>
             )}
           </div>
         ))}
@@ -219,6 +271,7 @@ const ClientsList = ({ members }) => {
         message="Confirmer la suppression de ce membre ? Cette action est irréversible."
       />
       <AddMemberModal open={addModal} onClose={() => setAddModal(false)} onAdd={handleAddMember} />
+      <SmsModal open={smsModal.open} onClose={() => setSmsModal({ open: false, member: null })} member={smsModal.member} />
     </>
   );
 };

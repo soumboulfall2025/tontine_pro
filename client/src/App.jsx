@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import PrivateRoute from "./components/PrivateRoute";
 import Toast from "./components/Toast";
 import React, { useState, useEffect } from "react";
+import Landing from "./pages/Landing";
 import "./App.css";
 
 function App() {
@@ -43,13 +44,15 @@ function App() {
     <div className="w-full min-h-screen bg-light-gray overflow-x-hidden">
       <Router>
         <Routes>
+          <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login showToast={showToast} />} />
-          <Route path="/" element={<PrivateRoute><Dashboard showToast={showToast} /></PrivateRoute>} />
+          <Route path="/dashboard" element={<PrivateRoute><Dashboard showToast={showToast} /></PrivateRoute>} />
           <Route path="/clients" element={<PrivateRoute><Clients showToast={showToast} /></PrivateRoute>} />
           <Route path="/members" element={<PrivateRoute><Members showToast={showToast} /></PrivateRoute>} />
           <Route path="/debts" element={<PrivateRoute><Debts showToast={showToast} /></PrivateRoute>} />
           <Route path="/reports" element={<PrivateRoute><Reports showToast={showToast} /></PrivateRoute>} />
           <Route path="/settings" element={<PrivateRoute><Settings showToast={showToast} /></PrivateRoute>} />
+          <Route path="*" element={<Landing />} />
         </Routes>
         <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: "", type: toast.type })} />
       </Router>

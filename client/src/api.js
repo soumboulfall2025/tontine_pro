@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://tontine-pro-server.onrender.com/api";
+const API_URL = "https://tontine-pro-client.onrender.com/api";
 
 // --- Gestion du token JWT ---
 export const getToken = () => localStorage.getItem("token");
@@ -68,5 +68,21 @@ export const markDebtPaid = async (debtId, paidBy) => {
 
 export const deleteDebt = async (debtId) => {
   const res = await axios.delete(`${API_URL}/debts/${debtId}`);
+  return res.data;
+};
+
+// --- Tontines ---
+export const getTontines = async () => {
+  const res = await axios.get(`${API_URL}/tontines/mine`);
+  return res.data;
+};
+
+export const createTontine = async (data) => {
+  const res = await axios.post(`${API_URL}/tontines`, data);
+  return res.data;
+};
+
+export const joinTontine = async (id) => {
+  const res = await axios.post(`${API_URL}/tontines/${id}/join`);
   return res.data;
 };

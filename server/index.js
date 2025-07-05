@@ -41,11 +41,15 @@ mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 const membersRouter = require('./routes/members');
 const debtsRouter = require('./routes/debts');
 const authRouter = require('./routes/auth');
+const tontinesRouter = require('./routes/tontines');
+const smsRouter = require('./routes/sms');
 
 // --- Utilisation des routes ---
 app.use('/api/members', membersRouter);
 app.use('/api/debts', debtsRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/tontines', tontinesRouter);
+app.use('/api/sms', smsRouter);
 
 // --- Gestion des routes non trouvées ---
 app.use((req, res) => {
