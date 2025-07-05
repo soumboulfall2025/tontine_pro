@@ -63,7 +63,7 @@ export default function Landing() {
 					<div className="flex gap-4 mt-2 justify-center md:justify-start">
 						<motion.a
 							whileHover={{ scale: 1.05 }}
-							href="https://tontine-pro-client.onrender.com/login"
+							href="https://tontine-pro-client.onrender.com"
 							className="px-6 py-3 rounded-lg bg-[#008037] text-white font-bold shadow-lg transition hover:bg-[#00662a]"
 						>
 							Se connecter
@@ -144,7 +144,7 @@ export default function Landing() {
 			<section className="py-12 px-6 md:px-16 flex flex-col items-center gap-4 bg-gradient-to-t from-[#008037]/10 to-white">
 				<motion.a
 					whileHover={{ scale: 1.05 }}
-					href="https://tontine-pro-client.onrender.com/login"
+					href="https://tontine-pro-client.onrender.com"
 					className="px-8 py-4 rounded-lg bg-[#008037] text-white font-bold text-lg shadow-lg transition hover:bg-[#00662a]"
 				>
 					Se connecter à votre espace
