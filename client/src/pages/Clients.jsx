@@ -23,22 +23,14 @@ const Clients = () => {
   const memberId = query.get("member");
 
   useEffect(() => {
-    fetchData();
-    // eslint-disable-next-line
-  }, [memberId]);
-
-  useEffect(() => {
     if (!selectedTontine) return;
-    setLoading(true);
-    getMembers(selectedTontine._id).then((m) => {
-      setMembers(m);
-      setLoading(false);
-    });
-  }, [selectedTontine]);
+    fetchData(selectedTontine._id);
+    // eslint-disable-next-line
+  }, [selectedTontine, memberId]);
 
-  const fetchData = async () => {
+  const fetchData = async (tontineId) => {
     setLoading(true);
-    const m = await getMembers();
+    const m = tontineId ? await getMembers(tontineId) : [];
     setMembers(m);
     if (memberId) {
       const d = await getDebtsByMember(memberId);

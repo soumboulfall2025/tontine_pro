@@ -167,7 +167,12 @@ const ClientsList = ({ members }) => {
   const handleAddMember = async (data) => {
     setLoading(true);
     try {
-      const newMember = await addMember(data);
+      // Récupérer la tontine sélectionnée depuis le localStorage
+      const t = localStorage.getItem("selectedTontine");
+      const tontineId = t ? JSON.parse(t)._id : null;
+      if (!tontineId) throw new Error("Aucune tontine sélectionnée");
+      // Appeler addMember avec la tontine sélectionnée
+      const newMember = await addMember(data, tontineId);
       setLocalMembers((prev) => [...prev, newMember]);
     } catch (err) {
       alert("Erreur lors de l'ajout du membre");
