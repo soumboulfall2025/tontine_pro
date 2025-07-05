@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const features = [
 	{
@@ -39,6 +40,14 @@ const testimonials = [
 ];
 
 export default function Landing() {
+	const navigate = useNavigate();
+	useEffect(() => {
+		const user = localStorage.getItem("user");
+		if (user) {
+			navigate("/dashboard");
+		}
+	}, [navigate]);
+
 	return (
 		<div className="min-h-screen bg-white flex flex-col font-sans">
 			{/* Section Héros */}
