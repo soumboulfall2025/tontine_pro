@@ -19,17 +19,10 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
-  if (!user) {
-    console.log('Utilisateur non trouvé:', email);
-    return res.status(400).json({ error: 'Utilisateur non trouvé' });
-  }
+  if (!user) return res.status(400).json({ error: 'Utilisateur non trouvé' });
   const isMatch = await user.comparePassword(password);
-  if (!isMatch) {
-    console.log('Mot de passe incorrect pour:', email);
-    return res.status(400).json({ error: 'Mot de passe incorrect' });
-  }
+  if (!isMatch) return res.status(400).json({ error: 'Mot de passe incorrect' });
   const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
-  console.log('Login OK, token généré pour:', email);
   res.json({ token, user: { _id: user._id, email: user.email, role: user.role, name: user.name } });
 });
 
