@@ -21,13 +21,17 @@ const Login = () => {
     setSuccess("");
     try {
       const res = await login({ email, password });
-      if (res.user) {
-        localStorage.setItem("user", JSON.stringify(res.user));
-      } else if (res.role) {
-        localStorage.setItem("user", JSON.stringify({ role: res.role }));
+      if (res.token) {
+        if (res.user) {
+          localStorage.setItem("user", JSON.stringify(res.user));
+        } else if (res.role) {
+          localStorage.setItem("user", JSON.stringify({ role: res.role }));
+        }
+        setSuccess("Connexion réussie ! Redirection...");
+        setTimeout(() => navigate("/dashboard"), 1000);
+      } else {
+        setError("Token manquant, connexion impossible.");
       }
-      setSuccess("Connexion réussie ! Redirection...");
-      setTimeout(() => navigate("/dashboard"), 1000);
     } catch (err) {
       console.log('Erreur API:', err.response?.data);
       setError(err.response?.data?.message || JSON.stringify(err.response?.data) || "Erreur de connexion");
