@@ -20,8 +20,12 @@ async function createAdmin() {
 
   // Vérifie si l'admin existe déjà
   const exists = await User.findOne({ email });
+  // Si l'admin existe déjà, on le met à jour avec le nouveau mot de passe
   if (exists) {
-    console.log('Un utilisateur admin existe déjà avec cet email.');
+    exists.password = password; // le modèle va hasher
+    exists.role = 'admin';
+    await exists.save();
+    console.log('Admin mis à jour avec succès ! Email :', email);
     process.exit(0);
   }
 

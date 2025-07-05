@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://tontine-pro-client.onrender.com/api";
+const API_URL = "https://tontine-pro-server.onrender.com/api";
 
 // --- Gestion du token JWT ---
 export const getToken = () => localStorage.getItem("token");
