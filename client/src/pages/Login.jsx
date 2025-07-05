@@ -22,6 +22,7 @@ const Login = () => {
     try {
       const res = await login({ email, password });
       if (res.token) {
+        // Le token est déjà stocké par la fonction login (api.js)
         if (res.user) {
           localStorage.setItem("user", JSON.stringify(res.user));
         } else if (res.role) {
