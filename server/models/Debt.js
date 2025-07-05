@@ -6,6 +6,7 @@ const debtSchema = new mongoose.Schema({
   description: { type: String },
   date: { type: Date, required: true },
   status: { type: String, enum: ['payée', 'non payée'], default: 'non payée' },
+  paidBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Member' } // Ajout du champ payeur
 }, { timestamps: true });
 
 module.exports = mongoose.model('Debt', debtSchema);

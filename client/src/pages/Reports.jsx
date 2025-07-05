@@ -34,17 +34,17 @@ const Reports = () => {
   const topMembers = memberDebts.sort((a, b) => b.total - a.total).slice(0, 5);
 
   return (
-    <div className="flex flex-col md:flex-row w-full h-full min-h-screen">
+    <div className="flex flex-col md:flex-row w-full h-full min-h-screen overflow-x-hidden">
       <Sidebar />
-      <div className="flex-1 flex flex-col w-full h-full min-h-screen">
+      <div className="flex-1 flex flex-col w-full h-full min-h-screen min-w-0">
         <Navbar />
-        <main className="flex-1 p-4 md:p-8 bg-light-gray w-full h-full min-h-screen">
+        <main className="flex-1 p-4 md:p-8 bg-light-gray w-full h-full min-h-screen max-w-full">
           <h1 className="text-2xl font-bold mb-6">Rapports</h1>
           {loading ? (
             <div className="text-center py-10 text-gray-500">Chargement...</div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-white rounded-xl shadow p-6 flex flex-col gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 min-w-0">
+              <div className="bg-white rounded-xl shadow p-6 flex flex-col gap-4 w-full max-w-full">
                 <h2 className="text-lg font-semibold mb-2">Statistiques générales</h2>
                 <div className="flex flex-col gap-2">
                   <div className="flex justify-between">
@@ -65,7 +65,7 @@ const Reports = () => {
                   </div>
                 </div>
               </div>
-              <div className="bg-white rounded-xl shadow p-6 flex flex-col gap-4">
+              <div className="bg-white rounded-xl shadow p-6 flex flex-col gap-4 w-full max-w-full">
                 <h2 className="text-lg font-semibold mb-2">Top membres endettés</h2>
                 <ul className="divide-y">
                   {topMembers.map((m, i) => (

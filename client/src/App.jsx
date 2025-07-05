@@ -8,7 +8,7 @@ import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import PrivateRoute from "./components/PrivateRoute";
 import Toast from "./components/Toast";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
@@ -17,8 +17,30 @@ function App() {
     setToast({ message, type });
     setTimeout(() => setToast({ message: "", type }), 2500);
   };
+
+  // Déconnexion auto après 30 min d'inactivité
+  useEffect(() => {
+    let timeout;
+    const resetTimer = () => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = "/login";
+      }, 30 * 60 * 1000); // 30 min
+    };
+    window.addEventListener("mousemove", resetTimer);
+    window.addEventListener("keydown", resetTimer);
+    resetTimer();
+    return () => {
+      clearTimeout(timeout);
+      window.removeEventListener("mousemove", resetTimer);
+      window.removeEventListener("keydown", resetTimer);
+    };
+  }, []);
+
   return (
-    <div className="w-full min-h-screen bg-light-gray">
+    <div className="w-full min-h-screen bg-light-gray overflow-x-hidden">
       <Router>
         <Routes>
           <Route path="/login" element={<Login showToast={showToast} />} />

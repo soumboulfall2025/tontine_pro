@@ -40,6 +40,11 @@ export const addMember = async (member) => {
   return res.data;
 };
 
+export const deleteMember = async (memberId) => {
+  const res = await axios.delete(`${API_URL}/members/${memberId}`);
+  return res.data;
+};
+
 // --- Dettes ---
 export const getDebts = async () => {
   const res = await axios.get(`${API_URL}/debts`);
@@ -56,7 +61,12 @@ export const getDebtsByMember = async (memberId) => {
   return res.data;
 };
 
-export const markDebtPaid = async (debtId) => {
-  const res = await axios.patch(`${API_URL}/debts/${debtId}/pay`);
+export const markDebtPaid = async (debtId, paidBy) => {
+  const res = await axios.patch(`${API_URL}/debts/${debtId}/pay`, { paidBy });
+  return res.data;
+};
+
+export const deleteDebt = async (debtId) => {
+  const res = await axios.delete(`${API_URL}/debts/${debtId}`);
   return res.data;
 };

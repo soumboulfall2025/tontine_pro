@@ -12,10 +12,12 @@ const Sidebar = () => {
         <SidebarItem icon={<FaHome />} label="Tableau de bord" onClick={() => navigate("/")} />
         <SidebarItem icon={<FaUsers />} label="Clients" onClick={() => navigate("/clients")} />
         {isAdmin && (
-          <SidebarItem icon={<FaUsers />} label="Membres" onClick={() => navigate("/members")} />
+          <SidebarItem icon={<FaUsers />} label="Membres (admin)" onClick={() => navigate("/members")} />
         )}
         <SidebarItem icon={<FaMoneyBillWave />} label="Dettes / Cotisations" onClick={() => navigate("/debts")} />
-        <SidebarItem icon={<FaChartBar />} label="Rapports" onClick={() => navigate("/reports")} />
+        {isAdmin && (
+          <SidebarItem icon={<FaChartBar />} label="Rapports" onClick={() => navigate("/reports")} />
+        )}
         <SidebarItem icon={<FaCog />} label="Paramètres" onClick={() => navigate("/settings")} />
       </div>
     </aside>

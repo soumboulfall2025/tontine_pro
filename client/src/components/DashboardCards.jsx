@@ -17,7 +17,7 @@ const Card = ({ color, title, value }) => {
     yellow: "bg-yellow-100 text-yellow-700 border-yellow-400",
   };
   return (
-    <div className={`rounded-xl shadow border-l-8 p-5 flex flex-col gap-2 ${colorMap[color]}`}> 
+    <div className={`rounded-xl shadow border-l-8 p-5 flex flex-col gap-2 card-hover ${colorMap[color]}`}> 
       <span className="text-lg font-semibold">{title}</span>
       <span className="text-2xl font-bold">{value}</span>
     </div>

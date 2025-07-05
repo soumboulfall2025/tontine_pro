@@ -36,11 +36,11 @@ const Clients = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row w-full h-full min-h-screen">
+    <div className="flex flex-col md:flex-row w-full h-full min-h-screen overflow-x-hidden">
       <Sidebar />
-      <div className="flex-1 flex flex-col w-full h-full min-h-screen">
+      <div className="flex-1 flex flex-col w-full h-full min-h-screen min-w-0">
         <Navbar />
-        <main className="flex-1 p-4 md:p-8 bg-light-gray w-full h-full min-h-screen">
+        <main className="flex-1 p-4 md:p-8 bg-light-gray w-full h-full min-h-screen max-w-full">
           <h1 className="text-2xl font-bold mb-4">Clients / Membres</h1>
           {loading ? (
             <div className="text-center py-10 text-gray-500">Chargement...</div>
@@ -48,7 +48,7 @@ const Clients = () => {
             <>
               <ClientsList members={members} onViewDebts={() => {}} />
               {memberId && debts.length > 0 && (
-                <div className="mt-8">
+                <div className="mt-8 overflow-x-auto">
                   <h2 className="text-lg font-bold mb-2">Dettes de ce membre</h2>
                   <table className="min-w-full bg-white rounded-xl shadow">
                     <thead>
@@ -57,6 +57,7 @@ const Clients = () => {
                         <th className="py-2 px-2">Date</th>
                         <th className="py-2 px-2">Statut</th>
                         <th className="py-2 px-2">Description</th>
+                        <th className="py-2 px-2">Membre</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -68,6 +69,7 @@ const Clients = () => {
                             <span className={`px-2 py-1 rounded text-xs font-bold ${d.status === 'payée' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{d.status}</span>
                           </td>
                           <td className="py-2 px-2">{d.description}</td>
+                          <td className="py-2 px-2">{d.member?.name || '-'}</td>
                         </tr>
                       ))}
                     </tbody>
