@@ -27,7 +27,7 @@ const Login = () => {
         localStorage.setItem("user", JSON.stringify({ role: res.role }));
       }
       setSuccess("Connexion réussie ! Redirection...");
-      setTimeout(() => navigate("/"), 1000);
+      setTimeout(() => navigate("/dashboard"), 1000);
     } catch (err) {
       console.log('Erreur API:', err.response?.data);
       setError(err.response?.data?.message || JSON.stringify(err.response?.data) || "Erreur de connexion");
