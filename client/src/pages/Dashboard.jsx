@@ -162,7 +162,7 @@ const Dashboard = () => {
             <>
               <DashboardCards paid={totalPaid} unpaid={totalUnpaid} members={members.length} />
               <RecentDebtsTable debts={debts.slice(0, 5).map(d => ({
-                client: d.member?.name || "-",
+                client: d.member?.name || d.member?.email || d.member || "-",
                 amount: d.amount,
                 date: new Date(d.date).toLocaleDateString(),
                 status: d.status,

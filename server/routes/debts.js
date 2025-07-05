@@ -33,7 +33,7 @@ router.patch('/:id/pay', async (req, res) => {
       req.params.id,
       update,
       { new: true }
-    );
+    ).populate('member paidBy'); // Ajout du populate pour retour complet
     if (!debt) return res.status(404).json({ error: 'Dette non trouvée' });
     res.json(debt);
   } catch (err) {

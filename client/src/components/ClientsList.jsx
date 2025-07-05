@@ -147,6 +147,11 @@ const ClientsList = ({ members }) => {
       m.phone?.toLowerCase().includes(search.toLowerCase())
   );
 
+  // Détection de la disponibilité WhatsApp (Twilio)
+  const whatsappEnabled = !!process.env.REACT_APP_TWILIO_WHATSAPP_ENABLED;
+  // Détection de la disponibilité SMS (Twilio ou autre)
+  const smsEnabled = !!process.env.REACT_APP_TWILIO_SMS_ENABLED;
+
   const handleDelete = (id) => {
     setConfirm({ open: true, id });
   };
@@ -182,6 +187,18 @@ const ClientsList = ({ members }) => {
 
   return (
     <>
+      {/* Message d'info admin si WhatsApp non dispo */}
+      {isAdmin && !whatsappEnabled && (
+        <div className="mb-4 p-3 bg-yellow-100 text-yellow-800 rounded text-center">
+          ⚠️ La fonctionnalité WhatsApp n'est pas disponible (Twilio non configuré).
+        </div>
+      )}
+      {/* Message d'info admin si SMS non dispo */}
+      {isAdmin && !smsEnabled && (
+        <div className="mb-4 p-3 bg-yellow-100 text-yellow-800 rounded text-center">
+          ⚠️ La fonctionnalité SMS n'est pas disponible (aucun service SMS configuré).
+        </div>
+      )}
       <div className="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
         <input
           type="text"
@@ -253,11 +270,27 @@ const ClientsList = ({ members }) => {
                 >
                   Supprimer
                 </button>
+                {/* Masquer le bouton SMS si non dispo */}
+                {smsEnabled && (
+                  <button
+                    onClick={() => setSmsModal({ open: true, member: m })}
+                    className="bg-yellow-500 text-white px-3 py-1 rounded-lg button-hover ml-2"
+                  >
+                    Envoyer rappel
+                  </button>
+                )}
                 <button
-                  onClick={() => setSmsModal({ open: true, member: m })}
-                  className="bg-yellow-500 text-white px-3 py-1 rounded-lg button-hover ml-2"
+                  onClick={() => {
+                    if (!whatsappEnabled) {
+                      alert("WhatsApp non disponible : configurez Twilio pour activer cette fonctionnalité.");
+                      return;
+                    }
+                    // Ici, tu pourrais ouvrir une modale WhatsApp si dispo
+                  }}
+                  className={`bg-green-600 text-white px-3 py-1 rounded-lg button-hover ml-2 ${!whatsappEnabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  disabled={!whatsappEnabled}
                 >
-                  Envoyer rappel
+                  WhatsApp
                 </button>
               </>
             )}
