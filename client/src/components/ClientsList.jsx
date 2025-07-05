@@ -270,28 +270,21 @@ const ClientsList = ({ members }) => {
                 >
                   Supprimer
                 </button>
-                {/* Masquer le bouton SMS si non dispo */}
-                {smsEnabled && (
-                  <button
-                    onClick={() => setSmsModal({ open: true, member: m })}
-                    className="bg-yellow-500 text-white px-3 py-1 rounded-lg button-hover ml-2"
-                  >
-                    Envoyer rappel
-                  </button>
-                )}
+                {/* Boutons rappel désactivés */}
+                {/*
                 <button
-                  onClick={() => {
-                    if (!whatsappEnabled) {
-                      alert("WhatsApp non disponible : configurez Twilio pour activer cette fonctionnalité.");
-                      return;
-                    }
-                    // Ici, tu pourrais ouvrir une modale WhatsApp si dispo
-                  }}
-                  className={`bg-green-600 text-white px-3 py-1 rounded-lg button-hover ml-2 ${!whatsappEnabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  disabled={!whatsappEnabled}
+                  onClick={() => setSmsModal({ open: true, member: m })}
+                  className="bg-yellow-500 text-white px-3 py-1 rounded-lg button-hover ml-2"
+                >
+                  Envoyer rappel
+                </button>
+                <button
+                  onClick={() => {}}
+                  className="bg-green-600 text-white px-3 py-1 rounded-lg button-hover ml-2"
                 >
                   WhatsApp
                 </button>
+                */}
               </>
             )}
           </div>
