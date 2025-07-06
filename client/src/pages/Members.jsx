@@ -4,6 +4,8 @@ import Sidebar from "../components/Sidebar";
 import BottomNav from "../components/BottomNav";
 import { getMembers } from "../api";
 import axios from "axios";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 const Members = ({ showToast }) => {
   const [members, setMembers] = useState([]);
@@ -70,6 +72,24 @@ const Members = ({ showToast }) => {
     URL.revokeObjectURL(url);
   };
 
+  // Export PDF des membres
+  const exportMembersPDF = () => {
+    if (!members.length) return;
+    const doc = new jsPDF();
+    doc.text(`Membres de la tontine : ${selectedTontine && selectedTontine.name ? selectedTontine.name : ''}`, 10, 10);
+    window.jspdf_autotable.default(doc, {
+      head: [["Nom", "Téléphone", "Email", "Date de création"]],
+      body: members.map(m => [
+        m.name,
+        m.phone || "",
+        m.email || "",
+        m.createdAt ? new Date(m.createdAt).toLocaleDateString() : ""
+      ]),
+      startY: 20
+    });
+    doc.save(`membres_tontine_${selectedTontine && selectedTontine.name ? selectedTontine.name : ''}.pdf`);
+  };
+
   const user = JSON.parse(localStorage.getItem("user"));
   const isAdmin = user && user.role === "admin";
 
@@ -82,12 +102,20 @@ const Members = ({ showToast }) => {
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-2xl font-bold">Membres</h1>
             {isAdmin && (
-              <button
-                className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-sm ml-2"
-                onClick={exportMembersCSV}
-              >
-                Exporter CSV
-              </button>
+              <>
+                <button
+                  className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-sm ml-2"
+                  onClick={exportMembersCSV}
+                >
+                  Exporter CSV
+                </button>
+                <button
+                  className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-sm ml-2"
+                  onClick={exportMembersPDF}
+                >
+                  Exporter PDF
+                </button>
+              </>
             )}
           </div>
           {loading ? (

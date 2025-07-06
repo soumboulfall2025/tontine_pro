@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { deleteMember, addMember } from "../api";
+import { deleteMember, addMember, getTontines } from "../api";
 import axios from "axios";
 import { FaTrash, FaPlus, FaUser, FaHistory } from "react-icons/fa";
 
@@ -44,9 +44,16 @@ const AddMemberModal = ({ open, onClose, onAdd }) => {
     phone: "",
     password: "",
     role: "member",
+    tontine: ""
   });
+  const [tontines, setTontines] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    getTontines().then(setTontines);
+  }, []);
+
   if (!open) return null;
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -58,7 +65,7 @@ const AddMemberModal = ({ open, onClose, onAdd }) => {
     try {
       await onAdd(form);
       onClose();
-      setForm({ name: "", email: "", phone: "", password: "", role: "member" });
+      setForm({ name: "", email: "", phone: "", password: "", role: "member", tontine: "" });
     } catch (err) {
       setError("Erreur lors de l'ajout du membre");
     }
@@ -75,6 +82,12 @@ const AddMemberModal = ({ open, onClose, onAdd }) => {
         <select name="role" value={form.role} onChange={handleChange} className="p-2 rounded border">
           <option value="member">Membre</option>
           <option value="admin">Admin</option>
+        </select>
+        <select name="tontine" value={form.tontine} onChange={handleChange} required className="p-2 rounded border">
+          <option value="">Sélectionner une tontine</option>
+          {tontines.map(t => (
+            <option key={t._id} value={t._id}>{t.name}</option>
+          ))}
         </select>
         {error && <div className="text-red-500 text-sm text-center">{error}</div>}
         <div className="flex gap-2 justify-center mt-2">
@@ -173,11 +186,8 @@ const ClientsList = ({ members }) => {
   const handleAddMember = async (data) => {
     setLoading(true);
     try {
-      // Récupérer la tontine sélectionnée depuis le localStorage
-      const t = localStorage.getItem("selectedTontine");
-      const tontineId = t ? JSON.parse(t)._id : null;
+      const tontineId = data.tontine;
       if (!tontineId) throw new Error("Aucune tontine sélectionnée");
-      // Appeler addMember avec la tontine sélectionnée
       const newMember = await addMember(data, tontineId);
       setLocalMembers((prev) => [...prev, newMember]);
     } catch (err) {

@@ -6,7 +6,7 @@ import BottomNav from "../components/BottomNav";
 import DashboardCards from "../components/DashboardCards";
 import RecentDebtsTable from "../components/RecentDebtsTable";
 import Spinner from "../components/Spinner";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaWhatsapp } from "react-icons/fa";
 
 const Dashboard = () => {
   const [members, setMembers] = useState([]);
@@ -150,7 +150,7 @@ const Dashboard = () => {
               }}
               className="ml-2 px-3 py-1 rounded bg-green-600 text-white font-bold button-hover flex items-center gap-2"
             >
-              <i className="fab fa-whatsapp text-xl"></i> Inviter via WhatsApp
+              <FaWhatsapp className="text-xl" /> Inviter via WhatsApp
             </button>
           )}
         </div>
