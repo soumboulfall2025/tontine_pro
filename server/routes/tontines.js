@@ -65,16 +65,21 @@ router.delete("/:id", authMiddleware, adminOnly, async (req, res) => {
 
 // Générer un lien d'invitation sécurisé pour une tontine (admin uniquement)
 router.post("/:id/invite", authMiddleware, adminOnly, async (req, res) => {
-  const tontine = await Tontine.findById(req.params.id);
-  if (!tontine) return res.status(404).json({ message: "Tontine introuvable" });
-  if (tontine.admin.toString() !== req.user._id.toString())
-    return res.status(403).json({ message: "Non autorisé" });
-  // Générer un token unique (valable 48h)
-  const token = crypto.randomBytes(24).toString("hex");
-  tontine.inviteToken = { token, expires: Date.now() + 48 * 3600 * 1000 };
-  await tontine.save();
-  const inviteUrl = `${process.env.FRONTEND_URL || "http://localhost:5173"}/invite/${token}`;
-  res.json({ inviteUrl });
+  try {
+    const tontine = await Tontine.findById(req.params.id);
+    if (!tontine) return res.status(404).json({ message: "Tontine introuvable" });
+    if (tontine.admin.toString() !== req.user._id.toString())
+      return res.status(403).json({ message: "Non autorisé" });
+    // Générer un token unique (valable 48h)
+    const token = crypto.randomBytes(24).toString("hex");
+    tontine.inviteToken = { token, expires: Date.now() + 48 * 3600 * 1000 };
+    await tontine.save();
+    const inviteUrl = `${process.env.FRONTEND_URL || "http://localhost:5173"}/invite/${token}`;
+    res.json({ inviteUrl });
+  } catch (err) {
+    console.error("Erreur génération lien invitation:", err);
+    res.status(500).json({ message: "Erreur serveur lors de la génération du lien", error: err.message });
+  }
 });
 
 module.exports = router;
