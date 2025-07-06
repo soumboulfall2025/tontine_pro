@@ -240,7 +240,7 @@ const Debts = ({ showToast }) => {
                     <tbody>
                       {paginated.map((d, i) => (
                         <tr key={i} className="border-b last:border-0 hover:bg-gray-50 transition cursor-pointer">
-                          <td className="py-2 px-2 font-medium truncate">{members.find(m => m._id === d.member)?.name || "-"}</td>
+                          <td className="py-2 px-2 font-medium truncate">{d.member?.name || '-'}</td>
                           <td className="py-2 px-2 truncate">{d.amount} FCFA</td>
                           <td className="py-2 px-2 truncate">{new Date(d.date).toLocaleDateString()}</td>
                           <td className="py-2 px-2">
@@ -248,7 +248,7 @@ const Debts = ({ showToast }) => {
                               ${d.status === 'payée' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{d.status}</span>
                           </td>
                           <td className="py-2 px-2 truncate">{d.description}</td>
-                          <td className="py-2 px-2 truncate">{members.find(m => m._id === d.paidBy)?.name || '-'}</td>
+                          <td className="py-2 px-2 truncate">{d.paidBy?.name || '-'}</td>
                           {isAdmin && (
                             <td className="py-2 px-2 flex gap-2">
                               {d.status === 'non payée' && (
