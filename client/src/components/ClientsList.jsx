@@ -269,7 +269,8 @@ const ClientsList = ({ members }) => {
                   className="bg-red-500 text-white px-3 py-1 rounded-lg button-hover ml-2 flex items-center gap-2"
                   disabled={loading}
                 >
-                  <FaTrash /> Supprimer
+                  <FaTrash className="text-lg text-red-700" />
+                  <span className="hidden md:inline">Supprimer</span>
                 </button>
                 {/* Boutons rappel désactivés */}
                 {/*

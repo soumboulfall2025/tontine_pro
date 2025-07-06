@@ -260,7 +260,10 @@ const Debts = ({ showToast }) => {
                               {d.status === 'non payée' && (
                                 <button onClick={() => handleMarkPaid(d._id)} className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 text-xs flex items-center gap-1"><FaCheck /> Marquer comme payée</button>
                               )}
-                              <button onClick={() => handleDelete(d._id)} className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-xs flex items-center gap-1"><FaTrash /> Supprimer</button>
+                              <button onClick={() => handleDelete(d._id)} className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-xs flex items-center gap-1">
+                                <FaTrash className="text-lg text-red-700" />
+                                <span className="hidden md:inline">Supprimer</span>
+                              </button>
                             </td>
                           )}
                         </tr>
