@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Tontine = require("../models/Tontine");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
+const crypto = require("crypto");
 
 // Créer une tontine
 router.post("/", authMiddleware, async (req, res) => {
@@ -36,6 +37,19 @@ router.post("/:id/join", authMiddleware, async (req, res) => {
   res.json(tontine);
 });
 
+// Rejoindre une tontine via un token d'invitation
+router.post("/join/:token", authMiddleware, async (req, res) => {
+  const tontine = await Tontine.findOne({ "inviteToken.token": req.params.token });
+  if (!tontine || !tontine.inviteToken || tontine.inviteToken.expires < Date.now()) {
+    return res.status(400).json({ message: "Lien d'invitation invalide ou expiré" });
+  }
+  if (!tontine.members.includes(req.user._id)) {
+    tontine.members.push(req.user._id);
+    await tontine.save();
+  }
+  res.json({ success: true, tontine });
+});
+
 // Détails d'une tontine
 router.get("/:id", authMiddleware, async (req, res) => {
   const tontine = await Tontine.findById(req.params.id).populate("members");
@@ -47,6 +61,20 @@ router.get("/:id", authMiddleware, async (req, res) => {
 router.delete("/:id", authMiddleware, adminOnly, async (req, res) => {
   await Tontine.findByIdAndDelete(req.params.id);
   res.json({ message: "Tontine supprimée" });
+});
+
+// Générer un lien d'invitation sécurisé pour une tontine (admin uniquement)
+router.post("/:id/invite", authMiddleware, adminOnly, async (req, res) => {
+  const tontine = await Tontine.findById(req.params.id);
+  if (!tontine) return res.status(404).json({ message: "Tontine introuvable" });
+  if (tontine.admin.toString() !== req.user._id.toString())
+    return res.status(403).json({ message: "Non autorisé" });
+  // Générer un token unique (valable 48h)
+  const token = crypto.randomBytes(24).toString("hex");
+  tontine.inviteToken = { token, expires: Date.now() + 48 * 3600 * 1000 };
+  await tontine.save();
+  const inviteUrl = `${process.env.FRONTEND_URL || "http://localhost:5173"}/invite/${token}`;
+  res.json({ inviteUrl });
 });
 
 module.exports = router;

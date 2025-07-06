@@ -88,3 +88,8 @@ export const joinTontine = async (id) => {
   const res = await axios.post(`${API_URL}/tontines/${id}/join`);
   return res.data;
 };
+
+export const generateInviteLink = async (tontineId) => {
+  const res = await axios.post(`${API_URL}/tontines/${tontineId}/invite`);
+  return res.data.inviteUrl;
+};

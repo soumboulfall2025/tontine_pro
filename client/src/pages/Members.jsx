@@ -46,6 +46,30 @@ const Members = ({ showToast }) => {
     }
   };
 
+  // Export CSV des membres
+  const exportMembersCSV = () => {
+    if (!members.length) return;
+    const header = ["Nom", "Téléphone", "Email", "Date de création"];
+    const rows = members.map((m) => [
+      m.name,
+      m.phone || "",
+      m.email || "",
+      m.createdAt ? new Date(m.createdAt).toLocaleDateString() : "",
+    ]);
+    const csv = [header, ...rows]
+      .map((r) => r.map((x) => `"${x}"`).join(","))
+      .join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `membres_tontine_${selectedTontine?.name || ""}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   const user = JSON.parse(localStorage.getItem("user"));
   const isAdmin = user && user.role === "admin";
 
@@ -57,6 +81,14 @@ const Members = ({ showToast }) => {
         <main className="flex-1 p-4 md:p-8 bg-light-gray w-full h-full min-h-screen">
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-2xl font-bold">Membres</h1>
+            {isAdmin && (
+              <button
+                className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-sm ml-2"
+                onClick={exportMembersCSV}
+              >
+                Exporter CSV
+              </button>
+            )}
           </div>
           {loading ? (
             <div>Loading...</div>

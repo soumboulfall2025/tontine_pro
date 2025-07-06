@@ -6,6 +6,10 @@ const tontineSchema = new mongoose.Schema({
   admin: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   createdAt: { type: Date, default: Date.now },
+  inviteToken: {
+    token: { type: String },
+    expires: { type: Date }
+  },
 });
 
 module.exports = mongoose.model("Tontine", tontineSchema);

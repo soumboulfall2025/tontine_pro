@@ -137,6 +137,22 @@ const Dashboard = () => {
             )}
           </div>
           {selectedTontine && <div className="text-gray-600 dark:text-gray-300 text-sm">{selectedTontine.description}</div>}
+          {isAdmin && selectedTontine && (
+            <button
+              onClick={async () => {
+                try {
+                  const url = await window.generateInviteLink(selectedTontine._id);
+                  const whatsappMsg = encodeURIComponent(`Rejoins ma tontine "${selectedTontine.name}" sur Tontine Pro ! Clique ici : ${url}`);
+                  window.open(`https://wa.me/?text=${whatsappMsg}`, '_blank');
+                } catch (e) {
+                  alert("Erreur lors de la génération du lien d'invitation");
+                }
+              }}
+              className="ml-2 px-3 py-1 rounded bg-green-600 text-white font-bold button-hover flex items-center gap-2"
+            >
+              <i className="fab fa-whatsapp text-xl"></i> Inviter via WhatsApp
+            </button>
+          )}
         </div>
         {/* Modale création tontine */}
         {tontineModal && (
