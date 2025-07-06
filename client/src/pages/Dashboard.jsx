@@ -141,11 +141,16 @@ const Dashboard = () => {
             <button
               onClick={async () => {
                 try {
-                  const url = await window.generateInviteLink(selectedTontine._id);
-                  const whatsappMsg = encodeURIComponent(`Rejoins ma tontine "${selectedTontine.name}" sur Tontine Pro ! Clique ici : ${url}`);
+                  // Debug : log les IDs pour vérification
+                  const user = JSON.parse(localStorage.getItem("user"));
+                  console.log("User ID:", user?._id, "Tontine admin:", selectedTontine.admin, "Tontine ID:", selectedTontine._id);
+                  const url = await generateInviteLink(selectedTontine._id);
+                  const whatsappMsg = encodeURIComponent(`Rejoins ma tontine \"${selectedTontine.name}\" sur Tontine Pro ! Clique ici : ${url}`);
                   window.open(`https://wa.me/?text=${whatsappMsg}`, '_blank');
                 } catch (e) {
-                  alert("Erreur lors de la génération du lien d'invitation");
+                  let msg = "Erreur lors de la génération du lien d'invitation.";
+                  if (e?.response?.data?.message) msg += "\n" + e.response.data.message;
+                  alert(msg);
                 }
               }}
               className="ml-2 px-3 py-1 rounded bg-green-600 text-white font-bold button-hover flex items-center gap-2"
