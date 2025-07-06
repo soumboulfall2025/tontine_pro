@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { deleteMember, addMember } from "../api";
 import axios from "axios";
+import { FaTrash, FaPlus, FaUser, FaHistory } from "react-icons/fa";
 
 const getInitials = (name) => {
   if (!name) return "?";
@@ -212,17 +213,17 @@ const ClientsList = ({ members }) => {
           {user && (
             <button
               onClick={() => navigate(`/clients?member=${user._id || user.id}`)}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg button-hover"
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg button-hover flex items-center gap-2"
             >
-              Mon historique
+              <FaHistory /> Mon historique
             </button>
           )}
           {isAdmin && (
             <button
               onClick={() => setAddModal(true)}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg button-hover"
+              className="bg-green-600 text-white px-4 py-2 rounded-lg button-hover flex items-center gap-2"
             >
-              Ajouter un membre
+              <FaPlus /> Ajouter un membre
             </button>
           )}
         </div>
@@ -257,18 +258,18 @@ const ClientsList = ({ members }) => {
             </div>
             <button
               onClick={() => navigate(`/clients?member=${m._id || m.id}`)}
-              className="bg-green-500 text-white px-3 py-1 rounded-lg button-hover"
+              className="bg-green-500 text-white px-3 py-1 rounded-lg button-hover flex items-center gap-2"
             >
-              Voir dettes
+              <FaUser /> Voir dettes
             </button>
             {isAdmin && (
               <>
                 <button
                   onClick={() => handleDelete(m._id)}
-                  className="bg-red-500 text-white px-3 py-1 rounded-lg button-hover ml-2"
+                  className="bg-red-500 text-white px-3 py-1 rounded-lg button-hover ml-2 flex items-center gap-2"
                   disabled={loading}
                 >
-                  Supprimer
+                  <FaTrash /> Supprimer
                 </button>
                 {/* Boutons rappel désactivés */}
                 {/*

@@ -6,6 +6,7 @@ import BottomNav from "../components/BottomNav";
 import DashboardCards from "../components/DashboardCards";
 import RecentDebtsTable from "../components/RecentDebtsTable";
 import Spinner from "../components/Spinner";
+import { FaPlus } from "react-icons/fa";
 
 const Dashboard = () => {
   const [members, setMembers] = useState([]);
@@ -126,7 +127,14 @@ const Dashboard = () => {
                 <option key={t._id} value={t._id}>{t.name}</option>
               ))}
             </select>
-            <button onClick={() => setTontineModal(true)} className="ml-4 px-3 py-1 rounded bg-[#008037] text-white font-bold button-hover">+ Nouvelle tontine</button>
+            {isAdmin && (
+              <button
+                onClick={() => setTontineModal(true)}
+                className="ml-4 px-3 py-1 rounded bg-[#008037] text-white font-bold button-hover flex items-center gap-2"
+              >
+                <FaPlus /> Nouvelle tontine
+              </button>
+            )}
           </div>
           {selectedTontine && <div className="text-gray-600 dark:text-gray-300 text-sm">{selectedTontine.description}</div>}
         </div>
