@@ -3,10 +3,17 @@ const Debt = require('../models/Debt');
 const Member = require('../models/Member');
 const router = express.Router();
 
-// GET toutes les dettes (filtrage par tontine possible)
-router.get('/', async (req, res) => {
+// GET toutes les dettes (filtrage par tontine possible, filtrage admin)
+router.get('/', require('../middleware/auth').authMiddleware, async (req, res) => {
+  const Tontine = require('../models/Tontine');
+  const tontines = await Tontine.find({ admin: req.user._id }).select('_id');
+  const tontineIds = tontines.map(t => t._id.toString());
   const filter = {};
-  if (req.query.tontine) filter.tontine = req.query.tontine;
+  if (req.query.tontine && tontineIds.includes(req.query.tontine)) {
+    filter.tontine = req.query.tontine;
+  } else {
+    filter.tontine = { $in: tontineIds };
+  }
   const debts = await Debt.find(filter).populate('member paidBy');
   res.json(debts);
 });

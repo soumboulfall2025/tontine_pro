@@ -3,10 +3,17 @@ const User = require('../models/User');
 const { authMiddleware, adminOnly } = require('../middleware/auth');
 const router = express.Router();
 
-// GET tous les membres (auth requis, filtrage par tontine possible)
+// GET tous les membres (auth requis, filtrage par tontine possible, filtrage admin)
 router.get('/', authMiddleware, async (req, res) => {
+  const tontineFilter = { admin: req.user._id };
+  const tontines = await require('../models/Tontine').find(tontineFilter).select('_id');
+  const tontineIds = tontines.map(t => t._id.toString());
   const filter = { role: 'member' };
-  if (req.query.tontine) filter.tontine = req.query.tontine;
+  if (req.query.tontine && tontineIds.includes(req.query.tontine)) {
+    filter.tontine = req.query.tontine;
+  } else {
+    filter.tontine = { $in: tontineIds };
+  }
   const members = await User.find(filter);
   res.json(members);
 });

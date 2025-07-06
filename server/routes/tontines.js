@@ -19,9 +19,9 @@ router.post("/", authMiddleware, async (req, res) => {
   }
 });
 
-// Lister les tontines de l'utilisateur
+// Lister les tontines dont l'utilisateur est admin (propriétaire)
 router.get("/mine", authMiddleware, async (req, res) => {
-  const tontines = await Tontine.find({ members: req.user._id });
+  const tontines = await Tontine.find({ admin: req.user._id });
   res.json(tontines);
 });
 
