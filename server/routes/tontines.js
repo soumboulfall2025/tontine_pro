@@ -70,6 +70,8 @@ router.post("/:id/invite", authMiddleware, adminOnly, async (req, res) => {
     if (!tontine) return res.status(404).json({ message: "Tontine introuvable" });
     if (tontine.admin.toString() !== req.user._id.toString())
       return res.status(403).json({ message: "Non autorisé" });
+    // Log de la variable d'environnement FRONTEND_URL
+    console.log("FRONTEND_URL:", process.env.FRONTEND_URL);
     // Générer un token unique (valable 48h)
     const token = crypto.randomBytes(24).toString("hex");
     tontine.inviteToken = { token, expires: Date.now() + 48 * 3600 * 1000 };

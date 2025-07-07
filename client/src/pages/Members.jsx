@@ -76,18 +76,24 @@ const Members = ({ showToast }) => {
   const exportMembersPDF = () => {
     if (!members.length) return;
     const doc = new jsPDF();
-    doc.text(`Membres de la tontine : ${selectedTontine && selectedTontine.name ? selectedTontine.name : ''}`, 10, 10);
-    window.jspdf_autotable.default(doc, {
+    doc.text(
+      `Membres de la tontine : ${selectedTontine && selectedTontine.name ? selectedTontine.name : ""}`,
+      10,
+      10
+    );
+    doc.autoTable({
       head: [["Nom", "Téléphone", "Email", "Date de création"]],
-      body: members.map(m => [
+      body: members.map((m) => [
         m.name,
         m.phone || "",
         m.email || "",
-        m.createdAt ? new Date(m.createdAt).toLocaleDateString() : ""
+        m.createdAt ? new Date(m.createdAt).toLocaleDateString() : "",
       ]),
-      startY: 20
+      startY: 20,
     });
-    doc.save(`membres_tontine_${selectedTontine && selectedTontine.name ? selectedTontine.name : ''}.pdf`);
+    doc.save(
+      `membres_tontine_${selectedTontine && selectedTontine.name ? selectedTontine.name : ""}.pdf`
+    );
   };
 
   const user = JSON.parse(localStorage.getItem("user"));
