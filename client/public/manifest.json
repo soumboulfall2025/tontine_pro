@@ -8,9 +8,9 @@
   "description": "Gestion moderne de tontine collaborative.",
   "icons": [
     {
-      "src": "/vite.svg",
+      "src": "/logo.jpeg",
       "sizes": "192x192",
-      "type": "image/svg+xml"
+      "type": "image/jpeg"
     }
   ]
 }
